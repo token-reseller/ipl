@@ -132,6 +132,93 @@ def _render_standings(lf: LeagueFrames) -> None:
     st.subheader("Standings table")
     st.dataframe(lf.team_df, hide_index=True, width="stretch")
 
+    # ---- Raw-selection view: strip captain/VC/booster multipliers ----------
+    raw_match = (
+        lf.team_match_player_df.dropna(subset=["base_gameday_points"])
+        .groupby(["team_id", "team_name", "match", "starts_at"], as_index=False)[
+            "base_gameday_points"
+        ]
+        .sum()
+        .rename(columns={"base_gameday_points": "base_match_points"})
+        .sort_values(["team_id", "starts_at"])
+    )
+    raw_match["cumulative_base_points"] = raw_match.groupby("team_id")[
+        "base_match_points"
+    ].cumsum()
+
+    st.subheader("Cumulative points by raw player selection (no captain / no booster)")
+    fig_raw = px.line(
+        raw_match,
+        x="match",
+        y="cumulative_base_points",
+        color="team_name",
+        markers=True,
+        hover_data={
+            "base_match_points": ":.1f",
+            "match": False,
+        },
+        labels={
+            "match": "Match #",
+            "cumulative_base_points": "Cumulative base points",
+            "team_name": "Fantasy team",
+        },
+    )
+    fig_raw.update_layout(legend_title_text="", height=480)
+    st.plotly_chart(fig_raw, width="stretch")
+
+    raw_totals = (
+        raw_match.groupby(["team_id", "team_name"], as_index=False)[
+            "base_match_points"
+        ]
+        .sum()
+        .rename(columns={"base_match_points": "raw_points"})
+        .sort_values("raw_points", ascending=False)
+        .reset_index(drop=True)
+    )
+    raw_totals["raw_rank"] = raw_totals.index + 1
+
+    st.subheader("Raw selection standings (no captain / VC / booster)")
+    st.dataframe(
+        raw_totals[["raw_rank", "team_name", "raw_points"]].style.format(
+            {"raw_points": "{:.1f}"}
+        ),
+        hide_index=True,
+        width="stretch",
+    )
+
+    st.subheader("Multiplier boost vs raw selection")
+    compare = (
+        lf.team_df[["team_id", "team_name", "overall_rank", "overall_points"]]
+        .merge(raw_totals[["team_id", "raw_rank", "raw_points"]], on="team_id")
+    )
+    compare["boost"] = compare["overall_points"] - compare["raw_points"]
+    compare["rank_delta"] = compare["raw_rank"] - compare["overall_rank"]
+    compare = compare.sort_values("overall_rank")[
+        [
+            "team_name",
+            "overall_rank",
+            "raw_rank",
+            "rank_delta",
+            "overall_points",
+            "raw_points",
+            "boost",
+        ]
+    ]
+    st.dataframe(
+        compare.style.format(
+            {
+                "overall_rank": "{:.0f}",
+                "raw_rank": "{:.0f}",
+                "rank_delta": "{:+.0f}",
+                "overall_points": "{:.1f}",
+                "raw_points": "{:.1f}",
+                "boost": "{:+.1f}",
+            }
+        ),
+        hide_index=True,
+        width="stretch",
+    )
+
 
 # ---------------------------------------------------------------------------
 # Tab 2 — Player explorer
