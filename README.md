@@ -8,7 +8,7 @@ Live dashboard: https://gentlemans-league-ipl.pages.dev/
 
 ## Data analytics
 
-A static single-page dashboard (`pages_ipl_dashboard/`) for exploring the
+A static single-page dashboard (`dashboard/`) for exploring the
 season. Aggregations are precomputed from the season snapshot into small JSON
 files, so it deploys as plain static assets on Cloudflare Pages — no backend.
 
@@ -31,14 +31,14 @@ legacy Streamlit app.
 
 ```bash
 # Build the dashboard's data artifacts (needs the season JSON locally — see
-# "Getting the data"). Writes pages_ipl_dashboard/data/{meta,players}.json.
+# "Getting the data"). Writes dashboard/data/{meta,players}.json.
 uv run python scripts/build_web_data.py
 
 # Preview locally
-python3 -m http.server -d pages_ipl_dashboard 8000
+python3 -m http.server -d dashboard 8000
 
 # Deploy to Cloudflare Pages
-npx wrangler pages deploy pages_ipl_dashboard --project-name gentlemans-league-ipl
+npx wrangler pages deploy dashboard --project-name gentlemans-league-ipl
 
 # Legacy server-rendered version of the same analytics
 uv run streamlit run scripts/dashboard.py
@@ -113,7 +113,7 @@ are regenerated rather than stored.
 ```
 src/ipl_fantasy/        data layer (league_data.py) + bot modules
 scripts/                build_web_data.py, dashboard.py (streamlit), bot + scraper entry points
-pages_ipl_dashboard/    static dashboard (app + committed data artifacts)
+dashboard/    static dashboard (app + committed data artifacts)
 data/                   raw season data (git-ignored; source in R2)
 docs/                   league rules reference
 ```

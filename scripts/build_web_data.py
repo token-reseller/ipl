@@ -5,8 +5,8 @@ Streamlit dashboard uses) and precomputes every aggregation that does not
 depend on an interactive filter. Emits two compact JSON files consumed by the
 static Cloudflare Pages app:
 
-    pages_ipl_dashboard/data/meta.json     -- everything except the Player Explorer raw rows
-    pages_ipl_dashboard/data/players.json  -- the one raw table the Player Explorer filters
+    dashboard/data/meta.json     -- everything except the Player Explorer raw rows
+    dashboard/data/players.json  -- the one raw table the Player Explorer filters
 
 Run::
 
@@ -29,7 +29,7 @@ from ipl_fantasy.league_data import LeagueFrames, load_league
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "gentlemans_league_2026.json"
-OUT_DIR = ROOT / "pages_ipl_dashboard" / "data"
+OUT_DIR = ROOT / "dashboard" / "data"
 
 # Copied from scripts dashboard.py so the web build stays self-contained.
 BOOSTER_DESCRIPTIONS = {
