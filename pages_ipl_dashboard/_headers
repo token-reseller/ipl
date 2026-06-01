@@ -1,0 +1,4 @@
+# Filenames are not content-hashed and we redeploy in place, so assets must be
+# revalidated rather than cached immutably. ETags make 304s cheap.
+/*
+  Cache-Control: public, max-age=0, must-revalidate

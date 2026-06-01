@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gentlemans League — Season Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script src="https://cdn.plot.ly/plotly-basic-2.35.2.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">🏏</span>
+        <div>
+          <h1 id="league-title">Gentlemans League</h1>
+          <p class="subtitle" id="league-sub">Season Explorer</p>
+        </div>
+      </div>
+      <div class="stats" id="header-stats"></div>
+    </header>
+
+    <nav class="tabs" id="tabs" role="tablist">
+      <button class="tab active" data-tab="standings">Standings</button>
+      <button class="tab" data-tab="players">Player Explorer</button>
+      <button class="tab" data-tab="boosters">Booster Analysis</button>
+      <button class="tab" data-tab="captaincy">Captaincy</button>
+    </nav>
+
+    <main>
+      <section id="standings" class="panel active"></section>
+      <section id="players" class="panel"></section>
+      <section id="boosters" class="panel"></section>
+      <section id="captaincy" class="panel"></section>
+    </main>
+
+    <footer class="foot">
+      <span id="foot-meta"></span>
+      <span>Static build · Cloudflare Pages</span>
+    </footer>
+
+    <script type="module" src="assets/app.js"></script>
+  </body>
+</html>
